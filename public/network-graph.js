@@ -67,37 +67,39 @@ let pages = {
       ],
 
     edges: [
-        {from: "Antoine", to: "Belle"},
-        {from: "Antoine", to: "Charles"},
-        {from: "Antoine", to: "Emil"},
+        //displayFrom and displayTo properties are custom for accurate tooltip displays
+        //not the most elegant solution, but it's the one that works :/
+        {from: "Antoine", to: "Belle", displayFrom: "Antoine", displayTo: "Belle"},
+        {from: "Antoine", to: "Charles", displayFrom: "Antoine", displayTo: "Charles"},
+        {from: "Antoine", to: "Emil", displayFrom: "Antoine", displayTo: "Emil"},
 
         
-        {from: "Belle", to: "Antoine"},
-        {from: "Belle", to: "Charles"},
-        {from: "Belle",   to: "B-A"},
-        {from: "B-A", to: "Antoine"},
+        {from: "Belle", to: "Antoine", displayFrom: "Belle", displayTo: "Antoine"},
+        {from: "Belle", to: "Charles", displayFrom: "Belle", displayTo: "Charles"},
+        {from: "Belle",   to: "B-A", displayFrom: "Belle", displayTo: "Antoine"},
+        {from: "B-A", to: "Antoine", displayFrom: "Belle", displayTo: "Antoine"},
 
-        {from: "Charles",   to: "Antoine"},
-        {from: "Charles",   to: "Belle"},
-        {from: "Charles",   to: "Dawn"},
-        {from: "Charles",   to: "C-A"},
-        {from: "C-A",   to: "Antoine"},
-        {from: "Charles",   to: "C-B"},
-        {from: "C-B",   to: "Belle"},        
+        {from: "Charles",   to: "Antoine", displayFrom: "Charles", displayTo: "Antoine"},
+        {from: "Charles",   to: "Belle", displayFrom: "Charles", displayTo: "Belle"},
+        {from: "Charles",   to: "Dawn", displayFrom: "Charles", displayTo: "Dawn"},
+        {from: "Charles",   to: "C-A", displayFrom: "Charles", displayTo: "Antoine"},
+        {from: "C-A",   to: "Antoine", displayFrom: "Charles", displayTo: "Antoine"},
+        {from: "Charles",   to: "C-B", displayFrom: "Charles", displayTo: "Belle"},
+        {from: "C-B",   to: "Belle", displayFrom: "Charles", displayTo: "Belle"},        
 
-        {from: "Dawn",   to: "Emil"},
-        {from: "Dawn",   to: "Frances"},
+        {from: "Dawn",   to: "Emil", displayFrom: "Dawn", displayTo: "Emil"},
+        {from: "Dawn",   to: "Frances", displayFrom: "Dawn", displayTo: "Frances"},
 
-        {from: "Emil",    to: "Antoine"},
-        {from: "Emil",    to: "Dawn"},
-        {from: "Emil",    to: "E-A"},
-        {from: "E-A",    to: "Antoine"},
-        {from: "Emil",    to: "E-D"},
-        {from: "E-D",    to: "Dawn"},
+        {from: "Emil",    to: "Antoine", displayFrom: "Emil", displayTo: "Antoine"},
+        {from: "Emil",    to: "Dawn", displayFrom: "Emil", displayTo: "Dawn"},
+        {from: "Emil",    to: "E-A", displayFrom: "Emil", displayTo: "Antoine"},
+        {from: "E-A",    to: "Antoine", displayFrom: "Emil", displayTo: "Antoine"},
+        {from: "Emil",    to: "E-D", displayFrom: "Emil", displayTo: "Dawn"},
+        {from: "E-D",    to: "Dawn", displayFrom: "Emil", displayTo: "Antoine"},
 
-        {from: "Frances",   to: "Dawn"},
-        {from: "Frances",    to: "F-D"},
-        {from: "F-D",    to: "Dawn"}
+        {from: "Frances",   to: "Dawn", displayFrom: "Frances", displayTo: "Dawn"},
+        {from: "Frances",    to: "F-D", displayFrom: "Frances", displayTo: "Dawn"},
+        {from: "F-D",    to: "Dawn", displayFrom: "Frances", displayTo: "Dawn"}
     ],
 };
 
@@ -128,6 +130,10 @@ chart.nodes().labels().enabled(true);
 chart.nodes().labels().format(`{%id}: {%numVisits}`);
 chart.nodes().labels().fontSize(12);
 chart.nodes().labels().fontWeight(600);
+
+//configure duplicate edge labels
+chart.edges().tooltip().useHtml(true);
+chart.edges().tooltip().format("From: {%displayFrom} </br> To: {%displayTo}");
 
 //adding arrows to each edge
 chart.edges().arrows({
