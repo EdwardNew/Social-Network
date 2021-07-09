@@ -1,4 +1,4 @@
-//creating graph data (Hardcoded, which isn't preffered, but it can be for this specific use case)
+//creating graph data (Hardcoded, which isn't preferred, but it can be for this specific use case)
 let pages = {
     nodes: [
         /* {id: "Antoine",
@@ -118,8 +118,19 @@ const revertData = string => {
     return object;
 }
 
+//these variables use storage to make numVisits only increases when visiting a different page (not on page reload)
+//when previousPage = currentPage, that means the page is just being reloaded
+//pulling previous page url from session storage
+let previousPage = window.sessionStorage.getItem("currentPage");
+previousPage = revertData(previousPage);
+//updating current page url
+let currentPage = window.location.href;
+//updating/pushing current page url to storage for next page
+window.sessionStorage.setItem("currentPage", convertData(currentPage));
+
+
 //function that checks if a webpage's graph object is already in storage and adds 1 to numVisits if it is and adds the graph object to strage if it isn't
-const checkStorage = page => {
+const checkStorage = pageTitle => {
     //runs through each existing element in storage to check if the object is already there
     for(let i=0; i<window.sessionStorage.length; i++){
         const key = window.sessionStorage.key(i);
@@ -218,10 +229,6 @@ const checkStorage = page => {
     }
 }
 
-//*******!!!!!!make sure to wrap this in an if to trigger only when url changes, so the numVisits doens't update everytime you reload!!!!******
-checkStorage(pageTitle);
-
-
 //function that iterates through the values in storage and adds them to the nodes array in the pages object so anychart can graph it
 const updateGraph = () => {
     //runs through each existing element in storage and adds it to the nodes array
@@ -235,9 +242,13 @@ const updateGraph = () => {
     }
 }
 
+
+//Triggers only when url changes, so the numVisits doens't update everytime the page reloads
+if(currentPage !== previousPage){
+    checkStorage(pageTitle);
+}
+
 updateGraph();
-
-
 
 
 
