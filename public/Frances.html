@@ -64,8 +64,28 @@
                     
                 </div>
             </div>
+
+            <div id="network-graph-canvas" class="container-md bg-light py-3 my-5" style="height: 420px;"></div>
+
         </section>
 
+        <!-- Link to the anychart "core" CDN which isn't really the core but pretty much, it's called the "base" package -->
+        <script src="https://cdn.anychart.com/releases/v8/js/anychart-base.min.js"></script>
+
+        <!-- Link to anychart graph/network graph CDN module -->
+        <script src="https://cdn.anychart.com/releases/8.10.0/js/anychart-graph.min.js"></script>
+            
+        <!-- Link to the separate anychart js file, listed after the anychart CDN becuase we use them in this file-->
+        <script src="network-graph.js"></script>
+
+        <!-- Link to bootstrap js CDN -->
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
+    
+        <script>
+            document.addEventListener("DOMContentLoaded", () => {
+                const logo = document.querySelector('.anychart-credits');
+                logo.remove();
+            });
+        </script>
     </body>
 </html>
