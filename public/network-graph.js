@@ -129,27 +129,44 @@ let currentPage = pageTitle;
 window.sessionStorage.setItem("currentPage", convertData(currentPage));
 
 
-//function that checks if a webpage's graph object is already in storage and adds 1 to numVisits if it is and adds the graph object to strage if it isn't
+//function that checks if a webpage's node object is already in storage and adds 1 to numVisits if it is and adds the node object to storage if it isn't
 const checkNodes = () => {
-    //runs through each existing element in storage to check if the object is already there
+    //declare and initialize the count variable here so it has a larger scope and can be used in a condition
+    let count = 0;
+    //runs through each existing element in storage to check if the nodes array is already there
     for(let i=0; i<window.sessionStorage.length; i++){
         const key = window.sessionStorage.key(i);
-        if(pageTitle.includes(key)){
-            //get data from storage
-            let dataObj = revertData(window.sessionStorage.getItem(key));
+        if(key === "nodes"){
+            count++;
+        }
+    }
+    if(!count){
+        //create an empty nodes array in storage to hold all of the nodes
+        window.sessionStorage.setItem("nodes", convertData({}));
+    }
+
+    //getting reference to the nodes array from storage
+    let nodes = window.sessionStorage.getItem("nodes");
+    //reverting nodes back into a js array from a JSON string
+    nodes = revertData(nodes);
+
+    //runs through each existing element in the nodes array to check if the object is already there
+    for(node in nodes){
+        if(pageTitle.includes(node)){
 
             //update numVisits for specific object
-            dataObj.numVisits++;
+            nodes[node].numVisits++;
 
             //push data back to storage
-            window.sessionStorage.setItem(key, convertData(dataObj));
+            window.sessionStorage.setItem("nodes", convertData(nodes));
             return;
         }
     }
-    //if the object does for the visited page does not yet exist, add the specific page to storage
+
+    //if the object for the visited page does not yet exist, add the specific page to the nodes object
     switch(pageTitle){
         case "Antoine's Page":
-            window.sessionStorage.setItem("Antoine", convertData(
+            nodes.Antoine = 
                 {id: "Antoine",
                     group: "standard",
                     numVisits: 1,
@@ -158,11 +175,10 @@ const checkNodes = () => {
                     fill: {
                         src: "assets/download (1).png"
                     }
-                }
-            ));
+                };
             break;
         case "Belle's Page":
-            window.sessionStorage.setItem("Belle", convertData(
+            nodes.Belle = 
                 {id: "Belle",
                     group: "standard",
                     numVisits: 1,
@@ -171,11 +187,10 @@ const checkNodes = () => {
                     fill: {
                         src: "assets/download (1).png"
                     }
-                }
-            ));
+                };
             break;
         case "Charles' Page":
-            window.sessionStorage.setItem("Charles", convertData(
+            nodes.Charles = 
                 {id: "Charles",
                     group: "standard",
                     numVisits: 1,
@@ -184,11 +199,10 @@ const checkNodes = () => {
                     fill: {
                         src: "assets/download (1).png"
                     }
-                }
-            ));
+                };
             break;
         case "Dawn's Page":
-            window.sessionStorage.setItem("Dawn", convertData(
+            nodes.Dawn = 
                 {id: "Dawn",
                     group: "standard",
                     numVisits: 1,
@@ -197,11 +211,10 @@ const checkNodes = () => {
                     fill: {
                         src: "assets/download (1).png"
                     }
-                }
-            ));
+                };
             break;
         case "Emil's Page":
-            window.sessionStorage.setItem("Emil", convertData(
+            nodes.Emil = 
                 {id: "Emil",
                     group: "standard",
                     numVisits: 1,
@@ -210,11 +223,10 @@ const checkNodes = () => {
                     fill: {
                         src: "assets/download (1).png"
                     }
-                }
-            ));
+                };
             break;
         case "Frances' Page":
-        window.sessionStorage.setItem("Frances", convertData(
+            nodes.Frances = 
             {id: "Frances",
                 group: "standard",
                 numVisits: 1,
@@ -223,10 +235,12 @@ const checkNodes = () => {
                 fill: {
                     src: "assets/download (1).png"
                 }
-            }
-        ));
+            };
         break;
     }
+
+    //push the updated nodes array back into storage
+    window.sessionStorage.setItem("nodes", convertData(nodes));
 }
 
 const checkEdges = () => {
@@ -244,9 +258,11 @@ const checkEdges = () => {
         window.sessionStorage.setItem("edges", convertData({}));
     }
 
-    //getting reference to the edges array from storage
+    //getting reference to the nodes and edges array from storage
+    let nodes = window.sessionStorage.getItem("nodes");
     let edges = window.sessionStorage.getItem("edges");
-    //reverting edges back into a js array from a JSON string
+    //reverting nodes and edges back into a js array from a JSON string
+    nodes = revertData(nodes);
     edges = revertData(edges);
 
     if(previousPage == "Antoine's Page"){
@@ -265,13 +281,11 @@ const checkEdges = () => {
     if(previousPage == "Belle's Page"){
         switch (currentPage) {
             case "Antoine's Page":
-                edges.BA = [{from: "Belle",   to: "B-A", displayFrom: "Belle", displayTo: "Antoine"},
+                edges.BA = [{from: "Belle", to: "B-A", displayFrom: "Belle", displayTo: "Antoine"},
                 {from: "B-A", to: "Antoine", displayFrom: "Belle", displayTo: "Antoine"}];
 
                 //inserting the ghost node into storage
-                window.sessionStorage.setItem("B-A", convertData(
-                    {id: "B-A", group: "ghost", x: 168.5, y: -22}
-                ));
+                nodes.BA = {id: "B-A", group: "ghost", x: 168.5, y: -22};
                 break;
             case "Charles' Page":
                 edges.BC = {from: "Belle", to: "Charles", displayFrom: "Belle", displayTo: "Charles"};
@@ -283,18 +297,14 @@ const checkEdges = () => {
             case "Antoine's Page":
                 edges.CA = [{from: "Charles",   to: "C-A", displayFrom: "Charles", displayTo: "Antoine"},
                 {from: "C-A", to: "Antoine", displayFrom: "Charles", displayTo: "Antoine"}];
-
-                window.sessionStorage.setItem("C-A", convertData(
-                    {id: "C-A", group: "ghost", x: 215, y: 115.5}
-                ));
+                
+                nodes.CA = {id: "C-A", group: "ghost", x: 215, y: 115.5};
                 break;
             case "Belle's Page":
                 edges.CB = [{from: "Charles",   to: "C-B", displayFrom: "Charles", displayTo: "Belle"},
                 {from: "C-B", to: "Belle", displayFrom: "Charles", displayTo: "Belle"}];
 
-                window.sessionStorage.setItem("C-B", convertData(
-                    {id: "C-B", group: "ghost", x: 514.5, y: 33}
-                ));
+                nodes.CB = {id: "C-B", group: "ghost", x: 514.5, y: 33};
                 break;
             case "Dawn's Page":
                 edges.CD = {from: "Charles", to: "Dawn", displayFrom: "Charles", displayTo: "Dawn"};
@@ -317,17 +327,13 @@ const checkEdges = () => {
                 edges.EA = [{from: "Emil", to: "E-A", displayFrom: "Emil", displayTo: "Antoine"},
                 {from: "E-A", to: "Antoine", displayFrom: "Emil", displayTo: "Antoine"}];
 
-                window.sessionStorage.setItem("E-A", convertData(
-                    {id: "E-A", group: "ghost", x: 8, y: 136}
-                ));
+                nodes.EA = {id: "E-A", group: "ghost", x: 8, y: 136};
                 break;
             case "Dawn's Page":
                 edges.ED = [{from: "Emil", to: "E-D", displayFrom: "Emil", displayTo: "Dawn"},
                 {from: "E-D", to: "Dawn", displayFrom: "Emil", displayTo: "Antoine"}];
 
-                window.sessionStorage.setItem("E-D", convertData(
-                    {id: "E-D", group: "ghost", x: 144, y: 197}
-                ));
+                nodes.ED = {id: "E-D", group: "ghost", x: 144, y: 197};
                 break;
         }
     }
@@ -337,27 +343,28 @@ const checkEdges = () => {
                 edges.FD = [{from: "Frances", to: "F-D", displayFrom: "Frances", displayTo: "Dawn"},
                 {from: "F-D", to: "Dawn", displayFrom: "Frances", displayTo: "Dawn"}];
 
-                window.sessionStorage.setItem("F-D", convertData(
-                    {id: "F-D", group: "ghost", x: 511, y: 204}
-                ));
+                nodes.FD = {id: "F-D", group: "ghost", x: 511, y: 204};
                 break;
         }
     }
 
-    //push the updated edges array back into storage
+    //push the updated nodes and edges arrays back into storage
+    window.sessionStorage.setItem("nodes", convertData(nodes));
     window.sessionStorage.setItem("edges", convertData(edges));
 }
 
 //function that iterates through the values in storage and adds them to the nodes array in the pages object so anychart can graph it
-const updateGraph = () => {
-    //runs through each existing element in storage and adds it to the nodes array
-    for(let i=0; i<window.sessionStorage.length; i++){
-        const key = window.sessionStorage.key(i);
-        //get data from storage
-        let dataObj = revertData(window.sessionStorage.getItem(key));
-        
-        //adds object to nodes array to graph
-        pages.nodes.push(dataObj);
+const updateNodes = () => {
+    //getting the edges object from storage
+    let storedNodes = window.sessionStorage.getItem("nodes");
+
+    //reverting the JSON string back to a js object
+    storedNodes = revertData(storedNodes);
+
+    //iterates through each property in the edges object
+    for(storedNode in storedNodes){
+            //updates/pushes the contents of each property to the local pages.edges array
+            pages.nodes.push(storedNodes[storedNode]);
     }
 }
 
@@ -393,7 +400,7 @@ if(currentPage !== previousPage){
     checkEdges();
 }
 
-updateGraph();
+updateNodes();
 updateEdges();
 
 
