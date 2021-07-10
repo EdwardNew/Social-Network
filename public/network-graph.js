@@ -394,10 +394,31 @@ const updateEdges = () => {
     }
 }
 
-//Triggers only when url changes, so the numVisits doens't update everytime the page reloads
+//initialize totalVisits variable outside of the function to give it a larger scope
+let totalVisits = window.sessionStorage.getItem("totalVisits");
+//get, update, and set totalVisits variable in session storage
+const updateTotalVisits = () => {
+    //check if the totalVisits variable is in storage
+    for(let i=0; i<window.sessionStorage.length; i++){
+        let key = window.sessionStorage.key(i);
+        //if totalVisits is already in storage, get it, update it, and send it back into storage
+        if(key == "totalVisits"){
+            totalVisits++;
+            window.sessionStorage.setItem(key, totalVisits);
+            return;
+        }
+    }
+    //if it is not in storage, add it in
+    window.sessionStorage.setItem("totalVisits", 1);
+    totalVisits = 1;
+}
+
+
+//Triggers only when url changes, so the numVisits and totalVisists doens't update everytime the page reloads
 if(currentPage !== previousPage){
     checkNodes();
     checkEdges();
+    updateTotalVisits();
 }
 
 updateNodes();
@@ -437,6 +458,10 @@ const styleNodes = () => {
 }
 
 styleNodes();
+
+
+//configure chart title with total number of visits
+chart.title().enabled(true).text(`Total Visits: ${totalVisits}`).align("right");
 
 //configure the node labels
 chart.nodes().labels().enabled(true);
