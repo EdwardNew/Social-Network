@@ -258,7 +258,7 @@ const checkEdges = () => {
         window.sessionStorage.setItem("edges", convertData({}));
     }
 
-    //getting reference to the nodes and edges array from storage
+    //getting reference to the nodes and edges arrays from storage
     let nodes = window.sessionStorage.getItem("nodes");
     let edges = window.sessionStorage.getItem("edges");
     //reverting nodes and edges back into a js array from a JSON string
