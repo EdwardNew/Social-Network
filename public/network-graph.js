@@ -461,7 +461,7 @@ styleNodes();
 
 
 //configure chart title with total number of visits
-chart.title().enabled(true).text(`Total Visits: ${totalVisits}`).align("right");
+chart.title().enabled(true).useHtml(true).text(`<b>Total Visits: ${totalVisits}</b>`).align("right");
 
 //configure the node labels
 chart.nodes().labels().enabled(true);
